@@ -25,7 +25,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/registration', 'registration')->name('user.registration');
 });
 
-Route::middleware(ApiAuthenticate::class)->get('/token/test', function (){
+Route::middleware('auth:sanctum')->get('/token/test', function (){
     return response()->json([
         'status' => true
     ]);

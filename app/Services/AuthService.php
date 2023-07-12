@@ -18,12 +18,20 @@ class AuthService implements AuthServiceContract
     {
     }
 
+    /**
+     * @param RegistrationUserDto $dto
+     * @return User
+     */
     public function registerNewUser(RegistrationUserDto $dto): User
     {
         return $this->userRepo->create($dto);
     }
 
-    public function getUserToAuth(string $email): Model
+    /**
+     * @param string $email
+     * @return User|null
+     */
+    public function getUserToAuth(string $email): ?User
     {
         return $this->userRepo->getByEmail($email);
     }

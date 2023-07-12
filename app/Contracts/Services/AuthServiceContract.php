@@ -11,7 +11,7 @@ interface AuthServiceContract
 {
     public function registerNewUser(RegistrationUserDto $dto): User;
 
-    public function getUserToAuth(string $email): Model;
+    public function getUserToAuth(string $email): ?User;
 
 
 }

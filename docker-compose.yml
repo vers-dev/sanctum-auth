@@ -1,35 +1,40 @@
-version: '3'
+version: '3.8'
+
 services:
+
+    # Web Server Service
+    nginx:
+        image: nginx:alpine
+        container_name: nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+        depends_on:
+            - app
+            - db
+    db:
+        image: postgres
+        container_name: postgres
+        volumes:
+            - ./docker/postgresql/data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: cheapsms_db
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+
+    # Application Service
     app:
+        container_name: cheapsms
         build:
-            context: ./
+            context: .
             dockerfile: Dockerfile
         volumes:
-            - '.:/var/www'
+            - .:/var/www
         ports:
-            - "${APP_PORT:-80}:80"
-        networks:
-            - app
-        restart: unless-stopped
+            - "9000:9000"
+        working_dir: /var/www
 
-    pgsql:
-        image: 'postgres:15.2'
-        ports:
-            - '${FORWARD_DB_PORT:-5432}:5432'
-        environment:
-            PGPASSWORD: '${DB_PASSWORD:-secret}'
-            POSTGRES_DB: '${DB_DATABASE}'
-            POSTGRES_USER: '${DB_USERNAME}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
-        volumes:
-            - 'sail-pgsql:/var/lib/postgresql/data'
-        networks:
-            - app
-
-networks:
-    app:
-        driver: bridge
-
-volumes:
-    sail-pgsql:
-        driver: local

@@ -52,6 +52,6 @@ class LoginRequest extends FormRequest
     public function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator): mixed
     {
         $errors = $validator->errors();
-        throw new ApiException($errors->first());
+        throw new ApiException($errors->first(), 422);
     }
 }

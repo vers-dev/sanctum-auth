@@ -23,7 +23,7 @@ class UserRepository implements UserRepositoryContract
      * @param RegistrationUserDto $dto
      * @return User
      */
-    public function create(RegistrationUserDto $dto): User
+    public function create(RegistrationUserDto $dto): Model
     {
         return $this->model->query()->create([
             'name' => $dto->name,
@@ -34,10 +34,10 @@ class UserRepository implements UserRepositoryContract
 
     /**
      * @param string $email
-     * @return Model
+     * @return User|null
      */
-    public function getByEmail(string $email): Model
+    public function getByEmail(string $email): ?User
     {
-        return $this->model->query()->where('email', $email)->first();
+        return $this->model->where('email', $email)->first();
     }
 }

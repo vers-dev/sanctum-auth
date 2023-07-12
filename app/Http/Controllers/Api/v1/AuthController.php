@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         $token = $user->createToken("API TOKEN")->plainTextToken;
 
-        return $this->successResponse(new AuthTokenResource($token));
+        return $this->successResponse(new AuthTokenResource(['token' => $token]));
     }
 
     /**
@@ -64,6 +64,6 @@ class AuthController extends Controller
 
         $token = $user->createToken("API TOKEN")->plainTextToken;
 
-        return $this->successResponse(new AuthTokenResource($token));
+        return $this->successResponse(new AuthTokenResource(['token' => $token]));
     }
 }

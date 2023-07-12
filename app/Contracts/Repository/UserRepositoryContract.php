@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 interface UserRepositoryContract
 {
 
-    public function create(RegistrationUserDto $dto): User;
+    public function create(RegistrationUserDto $dto): Model;
 
-    public function getByEmail(string $email): Model;
+    public function getByEmail(string $email): ?User;
 }

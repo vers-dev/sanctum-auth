@@ -1,23 +1,52 @@
-FROM webdevops/php-nginx:8.2-alpine
+FROM php:8.1.19-fpm
 
-ENV WEB_DOCUMENT_ROOT=/var/www/public
+RUN apt-get update
+
+# Install useful tools
+RUN apt-get -y install apt-utils nano wget dialog vim
+
+# Install important libraries
+RUN echo "\e[1;33mInstall important libraries\e[0m"
+RUN apt-get -y install --fix-missing \
+    apt-utils \
+    build-essential \
+    git \
+    curl \
+    libcurl4 \
+    libcurl4-openssl-dev \
+    zlib1g-dev \
+    libzip-dev \
+    zip \
+    bzip2 \
+    libbz2-dev \
+    locales \
+    libmcrypt-dev \
+    libicu-dev \
+    libonig-dev \
+    libxml2-dev
+
+# Install Postgre PDO
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
+RUN docker-php-ext-install \
+    exif \
+    pcntl \
+    bcmath \
+    ctype \
+    curl \
+    iconv \
+    xml \
+    soap \
+    pcntl \
+    mbstring \
+#    tokenizer \
+    bz2 \
+    zip \
+    intl
 
 
-ENV PHP_DISMOD=calendar,exiif,ffi,intl,gettext,ldap,imap,mysqli,pdo_mysql,soap,sockets,sysvmsg,sysvsm,sysvshm,shmop,xsl,apcu,vips,amqp
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
 
-WORKDIR /var/www
-COPY ./ /var/www
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-
-# add custom php-fpm pool settings, these get written at entrypoint startup
-ENV FPM_PM_MAX_CHILDREN=20 \
-    FPM_PM_START_SERVERS=2 \
-    FPM_PM_MIN_SPARE_SERVERS=1 \
-    FPM_PM_MAX_SPARE_SERVERS=3
-
-RUN chown -R application:application .
-
-RUN php artisan optimize
-RUN php artisan key:generate
