@@ -47,6 +47,6 @@ RUN docker-php-ext-install \
     zip \
     intl
 
+RUN chown www-data: /var/www
 
-
-
+WORKDIR /var/www
