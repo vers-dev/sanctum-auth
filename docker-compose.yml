@@ -5,32 +5,29 @@ services:
     # Web Server Service
     nginx:
         image: nginx:alpine
-        container_name: nginx
         ports:
             - "8080:80"
         volumes:
             - .:/var/www
-            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
         depends_on:
             - app
             - db
     db:
         image: postgres
-        container_name: postgres
         volumes:
-            - ./docker/postgresql/data:/var/lib/postgresql/data
+            - ./_docker/postgresql/data:/var/lib/postgresql/data
         ports:
             - "5432:5432"
         environment:
-            POSTGRES_DB: cheapsms_db
-            POSTGRES_USER: root
-            POSTGRES_PASSWORD: root
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
 
     # Application Service
     app:
-        container_name: cheapsms
         build:
-            context: .
+            context: ./_docker/php
             dockerfile: Dockerfile
         volumes:
             - .:/var/www
