@@ -9,8 +9,16 @@ use Laravel\Sanctum\NewAccessToken;
 
 interface AuthServiceContract
 {
+    /**
+     * @param RegistrationUserDto $dto
+     * @return User
+     */
     public function registerNewUser(RegistrationUserDto $dto): User;
 
+    /**
+     * @param string $email
+     * @return User|null
+     */
     public function getUserToAuth(string $email): ?User;
 
 

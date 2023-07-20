@@ -36,7 +36,9 @@ class AuthController extends Controller
         if (!$user || !Hash::check($validated['password'], $user->password))
             throw new ApiException('The provided credentials are incorrect', 401);
 
-        $token = $user->createToken("API TOKEN")->plainTextToken;
+        $user->tokens()->delete();
+
+        $token = $user->createToken("Application token", ['user'])->plainTextToken;
 
         return $this->successResponse(new AuthTokenResource(['token' => $token]));
     }
@@ -62,7 +64,7 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only(['email', 'password']), true))
             throw new ApiException('User not found', 404);
 
-        $token = $user->createToken("API TOKEN")->plainTextToken;
+        $token = $user->createToken("Application token", ['user'])->plainTextToken;
 
         return $this->successResponse(new AuthTokenResource(['token' => $token]));
     }
