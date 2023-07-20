@@ -20,15 +20,15 @@ services:
         ports:
             - "5432:5432"
         environment:
-            POSTGRES_DB: ${DB_DATABASE}
-            POSTGRES_USER: ${DB_USERNAME}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: cheapsms_db
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
 
     # Application Service
     app:
         build:
-            context: ./_docker/php
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./_docker/php/Dockerfile
         volumes:
             - .:/var/www
         ports:
