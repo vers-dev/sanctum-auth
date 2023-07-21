@@ -1,18 +1,33 @@
-version: '3.8'
+version: "3.7"
 
 services:
+    # image project
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - redis
+        networks:
+            - laravel
 
-    # Web Server Service
+    # nginx
     nginx:
         image: nginx:alpine
+        restart: unless-stopped
         ports:
             - "8080:80"
         volumes:
-            - .:/var/www
-            - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
-        depends_on:
-            - app
-            - db
+            - ./:/var/www
+            - ./_docker/nginx/:/etc/nginx/conf.d/
+        networks:
+            - laravel
+
+    # db mysql
     db:
         image: postgres
         volumes:
@@ -23,15 +38,15 @@ services:
             POSTGRES_DB: sanctum_db
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
+        networks:
+            - laravel
 
-    # Application Service
-    app:
-        build:
-            context: .
-            dockerfile: ./_docker/php/Dockerfile
-        volumes:
-            - .:/var/www
-        ports:
-            - "9000:9000"
-        working_dir: /var/www
+    # redis
+    redis:
+        image: redis:latest
+        networks:
+            - laravel
 
+networks:
+    laravel:
+        driver: bridge
