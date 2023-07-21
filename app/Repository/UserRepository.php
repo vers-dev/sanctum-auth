@@ -23,7 +23,7 @@ class UserRepository implements UserRepositoryContract
      * @param RegistrationUserDto $dto
      * @return User
      */
-    public function create(RegistrationUserDto $dto): Model
+    public function create(RegistrationUserDto $dto): User
     {
         return $this->model->query()->create([
             'name' => $dto->name,

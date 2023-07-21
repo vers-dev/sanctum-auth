@@ -20,7 +20,7 @@ services:
         ports:
             - "5432:5432"
         environment:
-            POSTGRES_DB: cheapsms_db
+            POSTGRES_DB: sanctum_db
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
 
