@@ -15,10 +15,10 @@ class AdminMiddleware
      *
      * @param Request $request
      * @param Closure(Request): (Response|RedirectResponse) $next
-     * @return Response|RedirectResponse
+     * @return RedirectResponse|Response|mixed
      * @throws ApiException
      */
-    public function handle(Request $request, Closure $next): Response|RedirectResponse
+    public function handle(Request $request, Closure $next): mixed
     {
 
         if($request->user()->tokenCan('admin')){
